@@ -139,7 +139,6 @@ section {
 }
 .collapseR {
   display: flex;
-  position: absolute;
   right: 0;
   justify-content: center;
   align-items: center;
@@ -152,7 +151,6 @@ section {
 }
 .collapseL {
   display: flex;
-  position: absolute;
   left: 0;
   justify-content: center;
   align-items: center;
@@ -165,7 +163,6 @@ section {
 }
 .restoreR {
   display: flex;
-  position: absolute;
   right: 0;
   justify-content: center;
   align-items: center;
@@ -178,7 +175,6 @@ section {
 }
 .restoreL {
   display: flex;
-  position: absolute;
   left: 0;
   justify-content: center;
   align-items: center;

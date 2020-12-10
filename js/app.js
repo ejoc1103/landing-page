@@ -20,6 +20,7 @@ for (let i = 0; i < navSections.length; i++) {
   nav.appendChild(navListItem);
 }
 
+// build collapse and restore buttons and add them to the dom
 sections.forEach((section, index) => {
   let collapse = document.createTextNode("X");
   let collapseButton = document.createElement("button");
@@ -31,16 +32,21 @@ sections.forEach((section, index) => {
 
   if (index % 2 === 0) {
     collapseButton.className = "collapseR";
-    restoreButton.className = "collapseR";
+    restoreButton.className = "restoreR";
   } else {
-    collapseButton.className = "restoreL";
+    collapseButton.className = "collapseL";
     restoreButton.className = "restoreL";
   }
+
+  restoreButton.setAttribute("data-foo", `section${index + 1}`);
+  collapseButton.setAttribute("data-foo", `section${index + 1}`);
+
   let sectionHeader = section.querySelector("h2");
   sectionHeader.appendChild(collapseButton);
   section.insertAdjacentElement("beforebegin", restoreButton);
 });
 
+//style nav
 const navBar = document.querySelector(".navbar__menu");
 const navList = document.querySelector("#navbar__list");
 navBar.style.className = "navbar__menu";
@@ -52,15 +58,22 @@ for (let i = 0; i < navSections.length; i++) {
 
 navBar.style.display = "flex";
 
-document.addEventListener("scroll", function () {
+//puts navbar on display when scrolling and takes it away 4 seconds after stopping ONLY WORKS SOMETIMES
+let isScrolling;
+
+window.addEventListener("scroll", function (e) {
   navBar.style.display = "flex";
-  setTimeout(function () {
+  window.clearTimeout(isScrolling);
+
+  isScrolling = setTimeout(function () {
     navBar.style.display = "none";
   }, 4000);
 });
 
+//Hides top of page button
 topOfPage.style.display = "none";
 
+//Shows the tops of page button after scrolling past the fold and makes it dissapear when you scroll back above that point
 document.addEventListener(
   "scroll",
   function () {
@@ -73,6 +86,8 @@ document.addEventListener(
   false
 );
 
+//checks what part of the page is closest to the top so you can put it in active mode when it is what is being viewed
+//also sets the active state to the navbar section
 document.addEventListener("scroll", function () {
   let sectionYs = [];
   let activeSection = null;
@@ -101,38 +116,34 @@ document.addEventListener("scroll", function () {
   });
 });
 
+//makes it so clicking the link scrolls to that section of the page SORT OF WORKS BUT NOT ACCURATE
 let links = document.querySelectorAll("a");
 links.forEach((link, index) => {
-  const scrollTarget = sections[index].getBoundingClientRect().y;
+  //   const scrollTarget = sections[index].getBoundingClientRect().y;
   link.addEventListener("click", function () {
-    scrollTo(0, scrollTarget);
+    sections[index].scrollIntoView();
   });
 });
 
+// functionality for scroll top button
 topOfPage.addEventListener("click", function () {
   scroll(0, 0);
 });
 
+//makes it so navbar pops up when you move into that area
 document.addEventListener("mousemove", function (e) {
   if (e.clientY < 100) {
     navBar.style.display = "flex";
   }
 });
 
+// creates functionaly for collaplse button and respotre buttons RESTORE BUTTONS NOT YET WORKING
 let collapseR = document.querySelectorAll(".collapseR");
 let collapseL = document.querySelectorAll(".collapseL");
 
-collapseR.forEach((section) => {
+[...collapseR, ...collapseL].forEach((section) => {
   section.addEventListener("click", function (e) {
-    let sectionId = e.path[3].id;
-    document.querySelector(`#${sectionId}`).style.display = "none";
-  });
-});
-
-collapseL.forEach((section) => {
-  section.addEventListener("click", function (e) {
-    console.log(e);
-    let sectionId = e.path[3].id;
+    let sectionId = section.getAttribute("data-foo");
     document.querySelector(`#${sectionId}`).style.display = "none";
   });
 });
@@ -140,18 +151,9 @@ collapseL.forEach((section) => {
 let restoreR = document.querySelectorAll(".restoreR");
 let restoreL = document.querySelectorAll(".restoreL");
 
-restoreR.forEach((section) => {
+[...restoreR, ...restoreL].forEach((section) => {
   section.addEventListener("click", function (e) {
-    let sectionId = e.path[3].id;
-    console.log(sectionId);
-    document.querySelector(`#${sectionId}`).style.display = "flex";
-  });
-});
-
-restoreL.forEach((section) => {
-  section.addEventListener("click", function (e) {
-    let sectionId = e.path[3].id;
-    console.log(sectionId);
+    let sectionId = e.target.getAttribute("data-foo");
     document.querySelector(`#${sectionId}`).style.display = "flex";
   });
 });
