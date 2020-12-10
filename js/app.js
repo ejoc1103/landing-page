@@ -1,24 +1,27 @@
 // Creates an array of all of the sections on the page even if more are added
 let sections = document.querySelectorAll("section");
 sections = Array.from(sections);
+
+//Selects the nav section to be used to add things to the nav
 const nav = document.querySelector("#navbar__list");
 const navSections = document.querySelectorAll("[data-nav] h2");
+
+//Creates and adds the button that will scroll you back to the top of the page
 const topOfPage = document.createElement("button");
 topOfPage.className = "button";
 const topButton = document.createTextNode("Top");
 topOfPage.appendChild(topButton);
-
 nav.insertAdjacentElement("afterend", topOfPage);
 
 //createNav
-for (let i = 0; i < navSections.length; i++) {
+navSections.forEach((section) => {
   const navListItem = document.createElement("li");
   const navLink = document.createElement("a");
-  const navSection = document.createTextNode(navSections[i].textContent);
+  const navSection = document.createTextNode(section.textContent);
   navLink.appendChild(navSection);
   navListItem.appendChild(navLink);
   nav.appendChild(navListItem);
-}
+});
 
 // build collapse and restore buttons and add them to the dom
 sections.forEach((section, index) => {
@@ -29,7 +32,7 @@ sections.forEach((section, index) => {
   let restore = document.createTextNode("+");
   let restoreButton = document.createElement("button");
   restoreButton.appendChild(restore);
-
+  //This switches the buttons back and forth left to right to fit with the sections
   if (index % 2 === 0) {
     collapseButton.className = "collapseR";
     restoreButton.className = "restoreR";
@@ -37,9 +40,12 @@ sections.forEach((section, index) => {
     collapseButton.className = "collapseL";
     restoreButton.className = "restoreL";
   }
-
+  //adds a data attribute to these buttons for later targeting
   restoreButton.setAttribute("data-foo", `section${index + 1}`);
   collapseButton.setAttribute("data-foo", `section${index + 1}`);
+
+  //needs to not be seen until the collapse button is clicked;
+  restoreButton.style.display = "none";
 
   let sectionHeader = section.querySelector("h2");
   sectionHeader.appendChild(collapseButton);
@@ -51,6 +57,7 @@ const navBar = document.querySelector(".navbar__menu");
 const navList = document.querySelector("#navbar__list");
 navBar.style.className = "navbar__menu";
 const listItem = document.querySelectorAll("#navbar__list a");
+
 //style nav links
 for (let i = 0; i < navSections.length; i++) {
   listItem[i].className = "menu__link";
@@ -58,7 +65,7 @@ for (let i = 0; i < navSections.length; i++) {
 
 navBar.style.display = "flex";
 
-//puts navbar on display when scrolling and takes it away 4 seconds after stopping ONLY WORKS SOMETIMES
+//puts navbar on display when scrolling and takes it away 2.5 seconds after stopping
 let isScrolling;
 
 window.addEventListener("scroll", function (e) {
@@ -67,7 +74,7 @@ window.addEventListener("scroll", function (e) {
 
   isScrolling = setTimeout(function () {
     navBar.style.display = "none";
-  }, 4000);
+  }, 2500);
 });
 
 //Hides top of page button
@@ -92,11 +99,18 @@ document.addEventListener("scroll", function () {
   let sectionYs = [];
   let activeSection = null;
   let sectionYIndex = 0;
-
   let activeMenu = document.querySelectorAll(".menu__link");
   activeMenu = Array.from(activeMenu);
   sections.forEach((section) => {
-    let y = section.getBoundingClientRect().y;
+    let y;
+    //This checks if a display has been set at all or if display none has been put on becasue in those instances
+    //we want those numbers set higher than the rest so theyre out of the way
+    if (!section.style.display || section.style.display === "flex") {
+      y = section.getBoundingClientRect().y;
+    } else {
+      y = 100000;
+    }
+    //we only need to check whats closest to zero so absolute value works best doesnt matter if its negative or postive
     sectionYs.push(Math.abs(y));
   });
   sectionYs.forEach((section, index) => {
@@ -106,7 +120,7 @@ document.addEventListener("scroll", function () {
     }
   });
   sections.forEach((section, index) => {
-    if (index === sectionYIndex) {
+    if (section.id === `section${sectionYIndex + 1}`) {
       section.className = "your-active-class";
       activeMenu[index].style.border = "4px solid orange";
     } else {
@@ -116,10 +130,9 @@ document.addEventListener("scroll", function () {
   });
 });
 
-//makes it so clicking the link scrolls to that section of the page SORT OF WORKS BUT NOT ACCURATE
+//makes it so clicking the link scrolls to that section of the page
 let links = document.querySelectorAll("a");
 links.forEach((link, index) => {
-  //   const scrollTarget = sections[index].getBoundingClientRect().y;
   link.addEventListener("click", function () {
     sections[index].scrollIntoView();
   });
@@ -137,14 +150,19 @@ document.addEventListener("mousemove", function (e) {
   }
 });
 
-// creates functionaly for collaplse button and respotre buttons RESTORE BUTTONS NOT YET WORKING
+// creates functionaly for collaplse button and respotre buttons
 let collapseR = document.querySelectorAll(".collapseR");
 let collapseL = document.querySelectorAll(".collapseL");
 
 [...collapseR, ...collapseL].forEach((section) => {
   section.addEventListener("click", function (e) {
     let sectionId = section.getAttribute("data-foo");
+    let sectionButtons = document.querySelectorAll(
+      `[data-foo*="${sectionId}"]`
+    );
     document.querySelector(`#${sectionId}`).style.display = "none";
+    sectionButtons[0].style.display = "flex";
+    sectionButtons[1].style.display = "none";
   });
 });
 
@@ -154,6 +172,11 @@ let restoreL = document.querySelectorAll(".restoreL");
 [...restoreR, ...restoreL].forEach((section) => {
   section.addEventListener("click", function (e) {
     let sectionId = e.target.getAttribute("data-foo");
+    let sectionButtons = document.querySelectorAll(
+      `[data-foo*="${sectionId}"]`
+    );
     document.querySelector(`#${sectionId}`).style.display = "flex";
+    sectionButtons[1].style.display = "flex";
+    sectionButtons[0].style.display = "none";
   });
 });

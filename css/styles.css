@@ -61,6 +61,7 @@ main {
 }
 
 section {
+  display: flex;
   position: relative;
   min-height: 80vh;
 }
