@@ -151,18 +151,44 @@ section {
   width: 5%;
 }
 .collapseL {
-    display: flex;
-    position: absolute;
-    left: 0;
-    justify-content: center;
-    align-items: center;
-    font-size: 1em;
-    background-color: #fff;
-    color: black;
-    margin: 0 30px;
-    height: 10%;
-    width: 5%;
-  }
+  display: flex;
+  position: absolute;
+  left: 0;
+  justify-content: center;
+  align-items: center;
+  font-size: 1em;
+  background-color: #fff;
+  color: black;
+  margin: 0 30px;
+  height: 10%;
+  width: 5%;
+}
+.restoreR {
+  display: flex;
+  position: absolute;
+  right: 0;
+  justify-content: center;
+  align-items: center;
+  font-size: 1em;
+  background-color: #fff;
+  color: black;   
+  margin: 0 30px;
+  height: 10%;
+  width: 5%;
+}
+.restoreL {
+  display: flex;
+  position: absolute;
+  left: 0;
+  justify-content: center;
+  align-items: center;
+  font-size: 1em;
+  background-color: #fff;
+  color: black;
+  margin: 0 30px;
+  height: 10%;
+  width: 5%;
+}
 @media only screen and (min-width: 35em) {
   .landing__container {
     max-width: 50em;

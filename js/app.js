@@ -1,3 +1,4 @@
+// Creates an array of all of the sections on the page even if more are added
 let sections = document.querySelectorAll("section");
 sections = Array.from(sections);
 const nav = document.querySelector("#navbar__list");
@@ -24,13 +25,20 @@ sections.forEach((section, index) => {
   let collapseButton = document.createElement("button");
   collapseButton.appendChild(collapse);
 
+  let restore = document.createTextNode("+");
+  let restoreButton = document.createElement("button");
+  restoreButton.appendChild(restore);
+
   if (index % 2 === 0) {
     collapseButton.className = "collapseR";
+    restoreButton.className = "collapseR";
   } else {
-    collapseButton.className = "collapseL";
+    collapseButton.className = "restoreL";
+    restoreButton.className = "restoreL";
   }
   let sectionHeader = section.querySelector("h2");
   sectionHeader.appendChild(collapseButton);
+  section.insertAdjacentElement("beforebegin", restoreButton);
 });
 
 const navBar = document.querySelector(".navbar__menu");
@@ -123,7 +131,27 @@ collapseR.forEach((section) => {
 
 collapseL.forEach((section) => {
   section.addEventListener("click", function (e) {
+    console.log(e);
     let sectionId = e.path[3].id;
     document.querySelector(`#${sectionId}`).style.display = "none";
+  });
+});
+
+let restoreR = document.querySelectorAll(".restoreR");
+let restoreL = document.querySelectorAll(".restoreL");
+
+restoreR.forEach((section) => {
+  section.addEventListener("click", function (e) {
+    let sectionId = e.path[3].id;
+    console.log(sectionId);
+    document.querySelector(`#${sectionId}`).style.display = "flex";
+  });
+});
+
+restoreL.forEach((section) => {
+  section.addEventListener("click", function (e) {
+    let sectionId = e.path[3].id;
+    console.log(sectionId);
+    document.querySelector(`#${sectionId}`).style.display = "flex";
   });
 });
