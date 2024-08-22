@@ -2,8 +2,6 @@
 
 ## Ed OConnor
 
-Hi! - welcome to _Our Wedding Site_!
-
 ### Udacity Project 2 Landing Page
 
 This is the second projects in the Udacity Front End Developer Nanodegree.
